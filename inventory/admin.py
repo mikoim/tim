@@ -4,7 +4,7 @@ from .models import *
 
 
 class ItemAdmin(admin.ModelAdmin):
-    list_display = ('id', 'category', 'name', 'cost', 'unit_cost')
+    list_display = ('id', 'category', 'name', 'unit_cost')
 
 
 class InventoryAdmin(admin.ModelAdmin):

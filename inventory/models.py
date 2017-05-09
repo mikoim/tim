@@ -15,7 +15,6 @@ class Item(CommonModel):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
 
-    cost = models.PositiveIntegerField(blank=True, null=True)
     unit_cost = models.PositiveIntegerField()
 
     class Meta(object):
