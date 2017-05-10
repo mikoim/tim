@@ -1,0 +1,13 @@
+{% extends "inventory/base.html" %}
+{% block content %}
+    <div class="section">
+        <div class="container">
+            <h1>Tiny Inventory Manager</h1>
+            <ul>
+                <li><a href="{% url 'inventory:item_upload' %}">Upload item data</a></li>
+                <li><a href="{% url 'inventory:inventory_upload' %}">Upload inventory data</a></li>
+                <li><a href="{% url 'inventory:list_report' %}">Show list of reports</a></li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}

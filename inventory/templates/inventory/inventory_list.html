@@ -1,0 +1,58 @@
+{% extends "inventory/base.html" %}
+{% block content %}
+    <div class="section">
+        <div class="container">
+            <div class="row z-depth-1">
+                <div class="col s12">
+                    <ul class="tabs">
+                        <li class="tab col s3"><a class="active" href="#test1">All</a></li>
+                        <li class="tab col s3"><a href="#test2">Rack 1</a></li>
+                        <li class="tab col s3"><a href="#test3">Rack 2</a></li>
+                        <li class="tab col s3"><a href="#test4">Rack 3</a></li>
+                    </ul>
+                </div>
+                <div id="test1" class="col s12">Test 1</div>
+                <div id="test2" class="col s12">
+                    <table class="responsive-table highlight">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Category</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Unit Cost</th>
+                            <th>Qty</th>
+                            <th>Total Cost</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for inventory in object_list %}
+                            <tr>
+                                <td>{{ inventory.item.id }}</td>
+                                <td>{{ inventory.item.category }}</td>
+                                <td>{{ inventory.item.name }}</td>
+                                <td>{{ inventory.item.description }}</td>
+                                <td>{{ inventory.item.unit_cost }}</td>
+                                <td>{{ inventory.count }}</td>
+                                <td>{{ inventory.sum }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div id="test3" class="col s12">Test 3</div>
+                <div id="test4" class="col s12">Test 4</div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(document).ready(function () {
+            $('ul.tabs').tabs();
+        });
+    </script>
+{% endblock %}
