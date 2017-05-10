@@ -30,6 +30,17 @@ class Report(CommonModel):
     def __str__(self):
         return self.datetime.isoformat()
 
+    def sum(self, rack_id=None):
+        if rack_id is None:
+            inv = self.inventories.all()
+        else:
+            inv = self.inventories.filter(rack_id=rack_id)
+
+        if inv.count() > 0:
+            return sum([x.sum() for x in inv])
+        else:
+            return 0
+
 
 class Inventory(CommonModel):
     report = models.ForeignKey(Report, related_name='reports')
