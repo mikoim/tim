@@ -52,8 +52,8 @@ class InventoryList(ListView):
     model = Inventory
 
     def get_queryset(self):
-        foo = get_object_or_404(Report, pk=self.kwargs['report_id'])
-        return Inventory.objects.filter(report=foo)
+        inventories = get_object_or_404(Report, pk=self.kwargs['report_id'])
+        return Inventory.objects.filter(report=inventories)
 
 
 class ReportList(ListView):
