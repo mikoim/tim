@@ -5,6 +5,9 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView
 
 from inventory.models import *
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def item_upload(request):
@@ -35,8 +38,8 @@ def item_upload(request):
                 item.unit_cost = unit_cost
 
                 item.save()
-        except csv.Error:
-            pass
+        except csv.Error as e:
+            logger.error(e)
 
         return redirect('inventory:index')
 
