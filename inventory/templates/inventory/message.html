@@ -1,0 +1,15 @@
+{% if messages %}
+    <div class="section">
+        <div class="container">
+            <div class="row">
+                {% for m in messages %}
+                    <div class="col s12">
+                        <div class="card-panel {% if m.tags == 'debug' %}purple{% elif m.tags == 'info' %}blue{% elif m.tags == 'success' %}green{% elif m.tags == 'warning' %}orange{% elif m.tags == 'error' %}red{% endif %}">
+                            <span class="white-text">{{ m }}</span>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endif %}
