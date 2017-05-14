@@ -1,13 +1,13 @@
 import csv
+import logging
 from collections import OrderedDict
 from io import TextIOWrapper
 
+from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect
 from django.views.generic import ListView
 
 from inventory.models import *
-import logging
-from django.contrib import messages
 
 logger = logging.getLogger(__name__)
 
@@ -16,9 +16,8 @@ def item_upload(request):
     if request.method == 'GET':
         return render(request, 'inventory/item_upload.html')
 
-    form_data = TextIOWrapper(request.FILES['csv'].file)
-
-    if form_data:
+    if 'csv' in request.FILES:
+        form_data = TextIOWrapper(request.FILES['csv'].file)
         csv_file = csv.reader(form_data)
 
         try:
@@ -27,6 +26,8 @@ def item_upload(request):
                     unit_cost = int(line[4])
                 except ValueError:
                     unit_cost = 0
+                    mes = f'{line[4]} cannot be cast to int. filled by 0. Check this line -> {line}'
+                    messages.warning(request, mes)
 
                 try:
                     item = Item.objects.get(pk=int(line[0]))
@@ -42,8 +43,13 @@ def item_upload(request):
                 item.save()
         except csv.Error as e:
             logger.error(e)
+            messages.error(request, f'Failed to import item data. {e}')
+        else:
+            messages.success(request, 'Item data import succeeded.')
+    else:
+        messages.warning(request, 'Item data is not uploaded.')
 
-        return redirect('inventory:index')
+    return redirect('inventory:item_upload')
 
 
 def inventory_upload(request):
