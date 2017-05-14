@@ -4,8 +4,9 @@ from collections import OrderedDict
 from io import TextIOWrapper
 
 from django.contrib import messages
+from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect
-from django.views.generic import ListView
+from django.views.generic import ListView, FormView
 
 from inventory.models import *
 
@@ -52,11 +53,24 @@ def item_upload(request):
     return redirect('inventory:item_upload')
 
 
-def inventory_upload(request):
-    if request.method == 'GET':
-        return render(request, 'inventory/inventory_upload.html')
+class InventoryUploadView(FormView):
+    form_class = InventoryUploadForm
+    template_name = 'inventory/inventory_upload.html'
+    success_url = reverse_lazy('inventory:inventory_upload')
 
-    raise NotImplemented('Inventory uploader is not implemented.')
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        files = request.FILES.getlist('inventory_data')
+        if form.is_valid():
+            for f in files:
+                data = TextIOWrapper(f)
+                print(data.readlines())
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def save_inventory(self, report: Report, file):
+        pass
 
 
 def report_detail(request, report_id):

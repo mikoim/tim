@@ -9,7 +9,7 @@ urlpatterns = [
 
     # Upload forms
     url(r'^item/upload$', views.item_upload, name='item_upload'),
-    url(r'^inventory/upload$', views.inventory_upload, name='inventory_upload'),
+    url(r'^inventory/upload$', views.InventoryUploadView.as_view(), name='inventory_upload'),
 
     # Viewers
     url(r'^report$', ReportList.as_view(), name='list_report'),

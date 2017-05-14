@@ -1,3 +1,6 @@
+from datetime import datetime as dt
+
+from django import forms
 from django.db import models
 
 
@@ -61,3 +64,8 @@ class Inventory(CommonModel):
 
     def __str__(self):
         return f'{str(self.item)} x {self.count} = {self.sum()} @ {self.rack_id}'
+
+
+class InventoryUploadForm(forms.Form):
+    datetime = forms.DateTimeField(initial=lambda: dt.now())
+    inventory_data = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
