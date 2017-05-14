@@ -45,7 +45,7 @@ class Report(CommonModel):
 class Inventory(CommonModel):
     report = models.ForeignKey(Report, related_name='inventories')
 
-    item = models.OneToOneField(Item)
+    item = models.ForeignKey(Item, related_name='items')
     count = models.IntegerField()
 
     rack_id = models.IntegerField()
