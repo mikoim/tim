@@ -23,7 +23,7 @@ urlpatterns = [
 ]
 
 # Django Debug Toolbar
-if settings.DEBUG:
+if settings.DEBUG and settings.DEBUG_TOOLBAR:
     import debug_toolbar
 
     urlpatterns += [

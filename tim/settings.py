@@ -123,9 +123,14 @@ STATIC_URL = '/static/'
 
 ATOMIC_REQUESTS = True
 
-
 # Django Debug Toolbar
 if DEBUG:
-    INSTALLED_APPS += ['debug_toolbar']
-    MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']
-    INTERNAL_IPS = ['127.0.0.1']
+    try:
+        import debug_toolbar as _
+
+        INSTALLED_APPS += ['debug_toolbar']
+        MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']
+        INTERNAL_IPS = ['127.0.0.1']
+        DEBUG_TOOLBAR = True
+    except ImportError:
+        DEBUG_TOOLBAR = False
