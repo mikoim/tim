@@ -12,6 +12,6 @@ urlpatterns = [
     url(r'^inventory/upload$', views.inventory_upload, name='inventory_upload'),
 
     # Viewers
-    url(r'^reports$', ReportList.as_view(), name='list_report'),
-    url(r'^reports/(?P<report_id>[0-9]+)$', InventoryList.as_view(), name='show_report'),
+    url(r'^report$', ReportList.as_view(), name='list_report'),
+    url(r'^report/(?P<report_id>[0-9]+)$', InventoryList.as_view(), name='show_report'),
 ]
