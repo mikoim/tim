@@ -4,7 +4,7 @@
         <div class="container">
             <form action='{% url "inventory:item_upload" %}' method='POST' enctype="multipart/form-data">
                 <h2>Upload item data</h2>
-                <input type='file' name='csv'>
+                <input type='file' accept='text/csv' name='csv'>
                 <input type="submit" value="Submit">
                 {% csrf_token %}
             </form>
