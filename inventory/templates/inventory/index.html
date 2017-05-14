@@ -1,13 +1,41 @@
 {% extends "inventory/base.html" %}
+{% block style %}
+    <style>
+        .icon-block {
+            font-size: inherit;
+        }
+    </style>
+{% endblock %}
 {% block content %}
     <div class="section">
         <div class="container">
             <h1>Tiny Inventory Manager</h1>
-            <ul>
-                <li><a href="{% url 'inventory:item_upload' %}">Upload item data</a></li>
-                <li><a href="{% url 'inventory:inventory_upload' %}">Upload inventory data</a></li>
-                <li><a href="{% url 'inventory:list_report' %}">Show list of reports</a></li>
-            </ul>
+            <div class="row">
+                <div class="col s12 m4">
+                    <div class="center">
+                        <a href="{% url 'inventory:item_upload' %}">
+                            <h2><i class="material-icons icon-block">input</i></h2>
+                            <h5>Upload Items</h5>
+                        </a>
+                    </div>
+                </div>
+                <div class="col s12 m4">
+                    <div class="center">
+                        <a href="{% url 'inventory:inventory_upload' %}">
+                            <h2><i class="material-icons icon-block">assignment</i></h2>
+                            <h5>Upload Inventories</h5>
+                        </a>
+                    </div>
+                </div>
+                <div class="col s12 m4">
+                    <div class="center">
+                        <a href="{% url 'inventory:list_report' %}">
+                            <h2><i class="material-icons icon-block">view_list</i></h2>
+                            <h5>Show Reports</h5>
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}

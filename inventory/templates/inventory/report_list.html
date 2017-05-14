@@ -1,15 +1,26 @@
 {% extends "inventory/base.html" %}
+{% block style %}
+    <style>
+        ul.circle > li {
+            list-style-type: circle;
+            list-style-position: inside;
+        }
+    </style>
+{% endblock %}
 {% block content %}
     <div class="section">
         <div class="container">
-            <h1>Reports</h1>
-            <ul>
-                {% for report in object_list %}
-                    <li><a href="{% url 'inventory:show_report' report_id=report.id %}">{{ report.datetime }}</a></li>
-                {% empty %}
-                    <li>No reports yet.</li>
-                {% endfor %}
-            </ul>
+            <div class="row">
+                <h1>Reports</h1>
+                <ul class="circle">
+                    {% for report in object_list %}
+                        <li><a href="{% url 'inventory:show_report' report_id=report.id %}">{{ report.datetime }}</a>
+                        </li>
+                    {% empty %}
+                        <li>No reports yet.</li>
+                    {% endfor %}
+                </ul>
+            </div>
         </div>
     </div>
 {% endblock %}
