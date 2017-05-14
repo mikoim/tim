@@ -1,6 +1,10 @@
 # tim
 The Tiny Inventory Manager
 
+## Requirements
+- Python >= 3.6.0
+- and modules in [requirements.txt](requirements.txt)
+
 ## Getting Started
 ```bash
 git clone https://github.com/mikoim/tim.git
