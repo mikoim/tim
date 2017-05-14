@@ -2,8 +2,7 @@
 {% block style %}
     <style>
         ul.circle > li {
-            list-style-type: circle;
-            list-style-position: inside;
+            list-style: circle inside;
         }
     </style>
 {% endblock %}
@@ -14,7 +13,7 @@
                 <h1>Reports</h1>
                 <ul class="circle">
                     {% for report in object_list %}
-                        <li><a href="{% url 'inventory:show_report' report_id=report.id %}">{{ report.datetime }}</a>
+                        <li><a href="{% url 'inventory:report_detail' report_id=report.id %}">{{ report.datetime }}</a>
                         </li>
                     {% empty %}
                         <li>No reports yet.</li>

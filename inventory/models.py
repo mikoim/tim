@@ -41,6 +41,9 @@ class Report(CommonModel):
         else:
             return 0
 
+    def rack_ids(self) -> list:
+        return sorted([x['rack_id'] for x in self.inventories.values('rack_id').annotate(n=models.Count('pk'))])
+
 
 class Inventory(CommonModel):
     report = models.ForeignKey(Report, related_name='inventories')

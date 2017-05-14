@@ -1,0 +1,79 @@
+{% extends "inventory/base.html" %}
+{% block content %}
+    <div class="section">
+        <div class="container">
+            <div class="row z-depth-1">
+                <div class="col s12">
+                    <ul class="tabs">
+                        <li class="tab col"><a class="active" href="#all">All</a></li>
+                        {% for rack_id, _ in inventories.items %}
+                            <li class="tab col"><a href="#rack{{ rack_id }}">Rack {{ rack_id }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div id="all" class="col s12">
+                    <table class="responsive-table highlight">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Category</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for rack_id, subtotal in subtotals_per_rack.items %}
+                            <tr>
+                                <td>Rack {{ rack_id }}</td>
+                                <td>{{ subtotal }}</td>
+                            </tr>
+                        {% endfor %}
+                        <tr>
+                            <td>Total</td>
+                            <td>{{ total }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                {% for rack_id, inventories in inventories.items %}
+                    <div id="rack{{ rack_id }}" class="col s12">
+                        <table class="responsive-table highlight">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Category</th>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Unit Cost</th>
+                                <th>Qty</th>
+                                <th>Total Cost</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for inventory in inventories %}
+                                <tr>
+                                    <td>{{ inventory.item.id }}</td>
+                                    <td>{{ inventory.item.category }}</td>
+                                    <td>{{ inventory.item.name }}</td>
+                                    <td>{{ inventory.item.description }}</td>
+                                    <td>{{ inventory.item.unit_cost }}</td>
+                                    <td>{{ inventory.count }}</td>
+                                    <td>{{ inventory.sum }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(document).ready(function () {
+            $('ul.tabs').tabs();
+        });
+    </script>
+{% endblock %}

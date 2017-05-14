@@ -1,11 +1,13 @@
 import csv
+from collections import OrderedDict
 from io import TextIOWrapper
 
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect
 from django.views.generic import ListView
 
 from inventory.models import *
 import logging
+from django.contrib import messages
 
 logger = logging.getLogger(__name__)
 
@@ -51,12 +53,27 @@ def inventory_upload(request):
     raise NotImplemented('Inventory uploader is not implemented.')
 
 
-class InventoryList(ListView):
-    model = Inventory
+def report_detail(request, report_id):
+    report = get_object_or_404(Report, pk=report_id)
+    rack_ids = report.rack_ids()
 
-    def get_queryset(self):
-        inventories = get_object_or_404(Report, pk=self.kwargs['report_id'])
-        return Inventory.objects.filter(report=inventories)
+    inventories = OrderedDict()
+    subtotals_per_rack = OrderedDict()
+    total = 0
+
+    for x in rack_ids:
+        inventories[x] = get_list_or_404(Inventory, report=report, rack_id=x)
+        subtotal = report.sum(x)
+        subtotals_per_rack[x] = subtotal
+        total += subtotal
+
+    context = {
+        'inventories': inventories,
+        'subtotals_per_rack': subtotals_per_rack,
+        'total': total,
+    }
+
+    return render(request, 'inventory/report_detail.html', context)
 
 
 class ReportList(ListView):

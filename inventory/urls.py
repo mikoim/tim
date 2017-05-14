@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from django.views.generic import TemplateView
 
-from inventory.views import ReportList, InventoryList
+from inventory.views import ReportList
 from . import views
 
 urlpatterns = [
@@ -13,5 +13,5 @@ urlpatterns = [
 
     # Viewers
     url(r'^report$', ReportList.as_view(), name='list_report'),
-    url(r'^report/(?P<report_id>[0-9]+)$', InventoryList.as_view(), name='show_report'),
+    url(r'^report/(?P<report_id>[0-9]+)$', views.report_detail, name='report_detail'),
 ]
