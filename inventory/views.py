@@ -1,5 +1,6 @@
 import csv
 import logging
+import os.path
 import re
 from collections import OrderedDict
 from io import TextIOWrapper
@@ -82,9 +83,19 @@ class InventoryUploadView(FormView):
             report.datetime = form.cleaned_data['datetime']
             report.save()
 
-            for index, f in enumerate(files, start=1):
+            for f in files:
+                filename = os.path.splitext(f.name)[0]
+
+                try:
+                    rack_id = int(filename)
+                except ValueError:
+                    messages.error(request, f'"{filename}" contains invalid character. Use integers only. ex) 1.txt')
+                    continue
+
                 lines = TextIOWrapper(f).readlines()
-                self.save_inventory(report, index, lines)
+                self.save_inventory(report, rack_id, lines)
+
+            messages.success(request, 'Import complete. Please check warnings and errors.')
 
             return self.form_valid(form)
         else:
