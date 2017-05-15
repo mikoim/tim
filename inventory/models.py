@@ -1,7 +1,6 @@
-from datetime import datetime as dt
-
 from django import forms
 from django.db import models
+from django.utils import timezone
 
 
 class CommonModel(models.Model):
@@ -67,5 +66,5 @@ class Inventory(CommonModel):
 
 
 class InventoryUploadForm(forms.Form):
-    datetime = forms.DateTimeField(initial=lambda: dt.now())
+    datetime = forms.DateTimeField(initial=lambda: timezone.now())
     inventory_data = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
