@@ -13,33 +13,44 @@ from inventory.models import *
 logger = logging.getLogger(__name__)
 
 
+def parse_line(line: list) -> tuple:
+    item_id = int(line[0])
+    category = line[1]
+    name = line[2]
+    try:
+        unit_cost = int(line[3])
+    except ValueError:
+        unit_cost = 0
+
+    return item_id, category, name, unit_cost
+
+
 def item_upload(request):
     if request.method == 'GET':
         return render(request, 'inventory/item_upload.html')
 
     if 'csv' in request.FILES:
-        form_data = TextIOWrapper(request.FILES['csv'].file)
-        csv_file = csv.reader(form_data)
+        form_data = TextIOWrapper(request.FILES['csv'].file, encoding='utf-8')
+        scrubbed_data = [x.replace('\0', '') for x in form_data.readlines()]
+        csv_file = csv.reader(scrubbed_data)
 
         try:
             for line in csv_file:
                 try:
-                    unit_cost = int(line[4])
+                    parsed_line = parse_line(line)
                 except ValueError:
-                    unit_cost = 0
-                    mes = f'{line[4]} cannot be cast to int. filled by 0. Check this line -> {line}'
-                    messages.warning(request, mes)
+                    messages.warning(request, f'Can\'t parse this line. Skipped! {line}')
+                    continue
 
                 try:
-                    item = Item.objects.get(pk=int(line[0]))
+                    item = Item.objects.get(pk=int(parsed_line[0]))
                 except Item.DoesNotExist:
                     item = Item()
 
-                item.id = int(line[0])
-                item.category = line[1]
-                item.name = line[2]
-                item.description = line[3]
-                item.unit_cost = unit_cost
+                item.id = parsed_line[0]
+                item.category = parsed_line[1]
+                item.name = parsed_line[2]
+                item.unit_cost = parsed_line[3]
 
                 item.save()
         except csv.Error as e:
