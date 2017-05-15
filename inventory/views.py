@@ -1,5 +1,6 @@
 import csv
 import logging
+import re
 from collections import OrderedDict
 from io import TextIOWrapper
 
@@ -11,6 +12,10 @@ from django.views.generic import ListView, FormView
 from inventory.models import *
 
 logger = logging.getLogger(__name__)
+
+REGEX_NORMALIZED = re.compile(r'(\d{5})')
+REGEX_RAW = re.compile(r'[a-z](\d{5})[a-z]')
+REGEX_RAW_CD = re.compile(r'[a-z](\d{5})[0-9A-D$/:+-.][a-z]')
 
 
 def parse_line(line: list) -> tuple:
@@ -73,15 +78,48 @@ class InventoryUploadView(FormView):
         form = self.get_form()
         files = request.FILES.getlist('inventory_data')
         if form.is_valid():
-            for f in files:
-                data = TextIOWrapper(f)
-                print(data.readlines())
+            report = Report()
+            report.datetime = form.cleaned_data['datetime']
+            report.save()
+
+            for index, f in enumerate(files, start=1):
+                lines = TextIOWrapper(f).readlines()
+                self.save_inventory(report, index, lines)
+
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
 
-    def save_inventory(self, report: Report, file):
-        pass
+    def normalize(self, code: str) -> int:
+        result = list(map(lambda x: x.match(code), [REGEX_RAW_CD, REGEX_RAW, REGEX_NORMALIZED]))
+
+        if not any(result):
+            messages.warning(self.request, f'Unknown barcode format. Skipped! {code}')
+            return -1
+
+        return int([x for x in result if x is not None][0].group(1))
+
+    def save_inventory(self, report: Report, rack_id: int, lines: list):
+        result = {}
+
+        for line in [x for x in map(self.normalize, lines) if x != -1]:
+            if line in result:
+                result[line] += 1
+            else:
+                result[line] = 1
+
+        for item_id, count in result.items():
+            inventory = Inventory()
+            inventory.report = report
+            try:
+                item = Item.objects.get(pk=item_id)
+            except Item.DoesNotExist:
+                messages.warning(self.request, f'{item_id} does not exists on Item database. Skipped!')
+                continue
+            inventory.item = item
+            inventory.count = count
+            inventory.rack_id = rack_id
+            inventory.save()
 
 
 def report_detail(request, report_id):
