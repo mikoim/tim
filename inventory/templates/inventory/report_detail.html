@@ -1,4 +1,5 @@
 {% extends "inventory/base.html" %}
+{% load humanize %}
 {% block content %}
     <div class="section">
         <div class="container">
@@ -15,20 +16,20 @@
                     <table class="responsive-table highlight">
                         <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Category</th>
+                            <th>Rack ID</th>
+                            <th>Subtotal / Total</th>
                         </tr>
                         </thead>
                         <tbody>
                         {% for rack_id, subtotal in subtotals_per_rack.items %}
                             <tr>
                                 <td>Rack {{ rack_id }}</td>
-                                <td>{{ subtotal }}</td>
+                                <td>{{ subtotal | intcomma }}</td>
                             </tr>
                         {% endfor %}
                         <tr>
                             <td>Total</td>
-                            <td>{{ total }}</td>
+                            <td>{{ total | intcomma }}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -54,9 +55,9 @@
                                     <td>{{ inventory.item.category }}</td>
                                     <td>{{ inventory.item.name }}</td>
                                     <td>{{ inventory.item.description }}</td>
-                                    <td>{{ inventory.item.unit_cost }}</td>
+                                    <td>{{ inventory.item.unit_cost | intcomma }}</td>
                                     <td>{{ inventory.count }}</td>
-                                    <td>{{ inventory.sum }}</td>
+                                    <td>{{ inventory.sum | intcomma }}</td>
                                 </tr>
                             {% endfor %}
                             </tbody>
