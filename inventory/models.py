@@ -1,5 +1,6 @@
 from django import forms
 from django.db import models
+from django.db.models import Sum, F
 from django.utils import timezone
 
 
@@ -39,7 +40,7 @@ class Report(CommonModel):
             inv = self.inventories.filter(rack_id=rack_id)
 
         if inv.count() > 0:
-            return sum([x.sum() for x in inv])
+            return inv.aggregate(sum=Sum(F('item__unit_cost') * F('count')))['sum']
         else:
             return 0
 
