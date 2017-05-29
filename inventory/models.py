@@ -35,14 +35,11 @@ class Report(CommonModel):
 
     def sum(self, rack_id=None):
         if rack_id is None:
-            inv = self.inventories.all()
+            inv = self.inventories.all().aggregate(sum=Sum(F('item__unit_cost') * F('count')))
         else:
-            inv = self.inventories.filter(rack_id=rack_id)
+            inv = self.inventories.filter(rack_id=rack_id).aggregate(sum=Sum(F('item__unit_cost') * F('count')))
 
-        if inv.count() > 0:
-            return inv.aggregate(sum=Sum(F('item__unit_cost') * F('count')))['sum']
-        else:
-            return 0
+        return inv['sum']
 
     def rack_ids(self) -> list:
         return sorted([x['rack_id'] for x in self.inventories.values('rack_id').annotate(n=models.Count('pk'))])
