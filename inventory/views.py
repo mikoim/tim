@@ -142,7 +142,7 @@ def report_detail(request, report_id):
     total = 0
 
     for x in rack_ids:
-        inventories[x] = get_list_or_404(Inventory, report=report, rack_id=x)
+        inventories[x] = Inventory.objects.filter(report=report, rack_id=x).prefetch_related('item')
         subtotal = report.sum(x)
         subtotals_per_rack[x] = subtotal
         total += subtotal
