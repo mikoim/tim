@@ -20,3 +20,7 @@ python manage.py runserver
 # 2b. Run tim in Gunicorn
 gunicorn tim.wsgi
 ```
+
+## Demo
+![](tim.png)
+
